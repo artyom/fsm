@@ -10,9 +10,9 @@ import (
 )
 
 // Possible state
-type State string
-
-var InvalidState = State("")
+type State struct {
+	Name string
+}
 
 // State change error: transition to invalid state requested
 type FsmTransitionError struct {
@@ -60,12 +60,12 @@ func (fsm *Fsm) Avail(dst State) bool {
 }
 
 // To changes state to given one, returning FsmTransitionError if transition cannot be made
-func (fsm *Fsm) To(dst State) (State, error) {
+func (fsm *Fsm) To(dst State) (*State, error) {
 	fsm.m.Lock()
 	defer fsm.m.Unlock()
 	if !fsm.Avail(dst) {
-		return InvalidState, FsmTransitionError{fsm.state}
+		return nil, FsmTransitionError{fsm.state}
 	}
 	fsm.state = dst
-	return fsm.state, nil
+	return &fsm.state, nil
 }

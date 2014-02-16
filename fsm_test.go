@@ -8,9 +8,9 @@ import (
 
 var (
 	MyFsm       *Fsm
-	green       = State("green")
-	yellow      = State("yellow")
-	red         = State("red")
+	green       = State{"green"}
+	yellow      = State{"yellow"}
+	red         = State{"red"}
 	transitions = map[State]map[State]bool{
 		green:  {yellow: true},
 		yellow: {green: true, red: true},
@@ -39,9 +39,9 @@ func resetState() {
 }
 
 func ExampleState() {
-	norm := State("normal")
-	warn := State("warning")
-	crit := State("critical")
+	norm := State{"normal"}
+	warn := State{"warning"}
+	crit := State{"critical"}
 	fmt.Println(norm)
 	fmt.Println(warn)
 	fmt.Println(crit)
@@ -56,9 +56,9 @@ func ExampleNewFsm() {
 	// Imagine monitoring states: green for "ok", yellow for "warning", red
 	// for "critical".
 	var (
-		green  = State("green")
-		yellow = State("yellow")
-		red    = State("red")
+		green  = State{"green"}
+		yellow = State{"yellow"}
+		red    = State{"red"}
 	)
 	// Transitions map: keys are source states, values are sets (boolean
 	// maps) of possible destination states.
@@ -81,7 +81,7 @@ func TestFull(t *testing.T) {
 		if err != nil {
 			t.Errorf("Failed to change state to %s: %s", testCase.cur, err)
 		}
-		if currentState != testCase.cur {
+		if *currentState != testCase.cur {
 			t.Errorf("Failed to change state: got %s, want %s", currentState, testCase.cur)
 		}
 		possibleStates := MyFsm.Possible()
